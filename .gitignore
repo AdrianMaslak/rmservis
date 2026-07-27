@@ -1,0 +1,12 @@
+# Prijaté objednávky — obsahujú osobné údaje zákazníkov, nikdy necommitovať
+api/objednavky.csv
+
+# nástroje
+node_modules/
+.vercel/
+.env
+.env.local
+
+# systémové
+Thumbs.db
+.DS_Store

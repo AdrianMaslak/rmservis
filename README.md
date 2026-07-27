@@ -58,8 +58,46 @@ Alebo stačí otvoriť `index.html` v prehliadači (formulár vtedy nebude odosi
 4. Otestujte formulár — objednávka musí prísť do e-mailu **a** zapísať sa
    do `api/objednavky.csv` (záloha, ktorú otvoríte v Exceli).
 
-Web funguje aj bez PHP (Netlify, Vercel, GitHub Pages) — vtedy buď nasaďte `server.js`,
-alebo formulár prepojte na službu typu Formspree (zmena jednej URL v `assets/js/main.js`).
+---
+
+## 3b. Nasadenie na Vercel
+
+Na Verceli **PHP nebeží**, preto je pripravená serverless náhrada `api/objednavka.js`.
+Frontend meniť netreba — `vercel.json` prepíše volanie `/api/objednavka.php` na túto funkciu.
+`.vercelignore` zároveň zabráni tomu, aby sa PHP súbor nahral ako verejný statický text.
+
+```bash
+npm i -g vercel
+cd rm
+vercel            # náhľadové nasadenie
+vercel --prod     # ostrá verzia
+```
+
+Alebo cez web: priečinok nahrajte do Git repozitára → vercel.com → **Add New → Project → Import**.
+Framework Preset nechajte na **Other**, Build Command aj Output Directory nechajte prázdne
+(je to statický web, nič sa nekompiluje).
+
+**Premenné prostredia** (Settings → Environment Variables) — bez nich formulár vráti chybu:
+
+| Premenná | Hodnota |
+|---|---|
+| `RESEND_API_KEY` | kľúč z [resend.com](https://resend.com) (zdarma do 3 000 e-mailov mesačne) |
+| `MAIL_ODOSIELATEL` | `web@rmautoservis.sk` — doména musí byť v Resende overená cez DNS |
+| `MAIL_KOMU` | `rmautoservis.sk@gmail.com` |
+| `WEBHOOK_URL` | *voliteľné* — kópia objednávky do Make/Zapier/Slacku |
+
+**Doména:** Settings → Domains → pridať `rmautoservis.sk` aj `www.rmautoservis.sk`
+a u registrátora nastaviť DNS podľa pokynov Vercelu. HTTPS sa nastaví samo.
+
+**Dva rozdiely oproti klasickému hostingu:**
+
+1. **Žiadna záloha do CSV.** Súborový systém Vercelu je dočasný. Preto funkcia pri
+   neúspešnom doručení nevráti „ďakujeme", ale chybu s telefónnym číslom — a celú
+   objednávku zapíše do logov (Vercel → Deployment → Logs), odkiaľ sa dá dohľadať.
+   Ak chcete istotu navyše, nastavte `WEBHOOK_URL` — objednávka pôjde dvomi cestami.
+2. **`.htaccess` sa ignoruje.** Bezpečnostné hlavičky, cache a presmerovania rieši `vercel.json`.
+
+`server.js` na Verceli nič nerobí, je len na lokálny náhľad.
 
 ---
 

@@ -1,0 +1,11 @@
+# PHP na Verceli nebeží — a nesmie sa dostať von ako statický súbor
+api/objednavka.php
+api/objednavky.csv
+
+# konfigurácia Apache hostingu, na Verceli sa ignoruje (nahrádza ju vercel.json)
+.htaccess
+
+# lokálny náhľadový server
+server.js
+
+README.md
