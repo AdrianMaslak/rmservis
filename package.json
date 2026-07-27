@@ -1,0 +1,13 @@
+{
+  "name": "rm-autoservis-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Prezentačný web RM Autoservis s.r.o., Banská Bystrica",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
