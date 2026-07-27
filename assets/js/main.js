@@ -26,20 +26,37 @@
   var burger = $('#burger');
   var nav = $('#nav');
   if (burger && nav) {
-    var closeNav = function () {
-      nav.classList.remove('is-open');
-      burger.setAttribute('aria-expanded', 'false');
-      document.body.classList.remove('is-locked');
-    };
-    burger.addEventListener('click', function () {
-      var open = nav.classList.toggle('is-open');
+    var mqMobile = window.matchMedia('(max-width:860px)');
+
+    var setNav = function (open) {
+      nav.classList.toggle('is-open', open);
       burger.setAttribute('aria-expanded', String(open));
       document.body.classList.toggle('is-locked', open);
+      document.documentElement.classList.toggle('is-locked', open);
+    };
+    var closeNav = function () { setNav(false); };
+
+    burger.addEventListener('click', function () {
+      setNav(!nav.classList.contains('is-open'));
     });
+
     $$('#nav a').forEach(function (a) { a.addEventListener('click', closeNav); });
+
+    /* klik mimo menu (stmavená plocha) ho zavrie */
+    document.addEventListener('click', function (e) {
+      if (!nav.classList.contains('is-open')) return;
+      if (nav.contains(e.target) || burger.contains(e.target)) return;
+      closeNav();
+    });
+
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && nav.classList.contains('is-open')) { closeNav(); burger.focus(); }
     });
+
+    /* po prechode na desktop nesmie ostať zamknuté rolovanie */
+    var onMq = function () { if (!mqMobile.matches) closeNav(); };
+    if (mqMobile.addEventListener) mqMobile.addEventListener('change', onMq);
+    else if (mqMobile.addListener) mqMobile.addListener(onMq);
   }
 
   /* ─── jemné odhalenie pri scrollovaní ─── */

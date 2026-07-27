@@ -166,6 +166,7 @@ h1,h2,h3,h4{ color:var(--ink); line-height:1.15; font-weight:700; letter-spacing
 .burger{
   display:none; width:42px; height:42px; flex:none; position:relative;
   background:#fff; border:1px solid var(--line); border-radius:var(--r); cursor:pointer;
+  touch-action:manipulation; -webkit-tap-highlight-color:transparent;
 }
 .burger span{
   position:absolute; left:11px; width:18px; height:1.7px; background:var(--ink);
@@ -452,19 +453,36 @@ h1,h2,h3,h4{ color:var(--ink); line-height:1.15; font-weight:700; letter-spacing
   .topbar__item{ display:none }
   .topbar__status{ margin-inline:auto }
 
+  /* panel visí pod hlavičkou — .hdr je sticky, teda je to jeho pozičný rodič */
   .nav{
-    position:fixed; inset:0; z-index:-1;
-    flex-direction:column; align-items:stretch; justify-content:center; gap:0;
-    padding:4.5rem var(--pad) 5rem; background:#fff;
-    opacity:0; pointer-events:none; transform:translateY(-6px);
-    transition:opacity .22s, transform .22s;
+    position:absolute; top:100%; left:0; right:0; z-index:1;
+    flex-direction:column; align-items:stretch; justify-content:flex-start; gap:0;
+    padding:.35rem var(--pad) calc(1.6rem + env(safe-area-inset-bottom));
+    background:#fff; border-bottom:1px solid var(--line);
+    box-shadow:0 20px 40px -20px rgba(11,17,38,.4);
+    max-height:calc(100vh - 76px);
+    max-height:calc(100dvh - 76px);
+    overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
+    opacity:0; visibility:hidden; pointer-events:none; transform:translateY(-8px);
+    transition:opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
   }
-  .nav.is-open{ opacity:1; pointer-events:auto; transform:none }
-  .nav > a{ font-size:1.2rem; font-weight:600; padding:1rem .1rem; border-bottom:1px solid var(--line-2) }
-  .nav__cta{ margin:1.2rem 0 0; padding:1.05rem !important; justify-content:center }
-  body.is-locked{ overflow:hidden }
+  .nav.is-open{
+    opacity:1; visibility:visible; pointer-events:auto; transform:none;
+    transition:opacity .2s ease, transform .2s ease, visibility 0s;
+  }
+  .nav > a{ font-size:1.12rem; font-weight:600; padding:.95rem .1rem; border-bottom:1px solid var(--line-2) }
+  .nav > a:nth-last-child(2){ border-bottom:0 }
+  .nav__cta{ margin:1rem 0 0; padding:1.05rem !important; justify-content:center }
 
-  .mbar{ display:flex }
+  html.is-locked, body.is-locked{ overflow:hidden }
+  /* stmavenie stránky pod otvoreným menu */
+  body.is-locked::after{
+    content:''; position:fixed; inset:0; z-index:99;
+    background:rgba(11,17,38,.42);
+  }
+
+  .mbar{ display:flex; transition:opacity .2s ease }
+  body.is-locked .mbar{ opacity:0; pointer-events:none }
   .ftr{ padding-bottom:60px }
   .facts__in{ grid-template-columns:1fr 1fr; gap:1.4rem 0 }
   .facts .fact:nth-child(3){ border-left:0; padding-left:0 }
