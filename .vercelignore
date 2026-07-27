@@ -5,7 +5,11 @@ api/objednavky.csv
 # konfigurácia Apache hostingu, na Verceli sa ignoruje (nahrádza ju vercel.json)
 .htaccess
 
-# lokálny náhľadový server
+# Lokálny náhľadový server. Musí sem ísť aj package.json — inak Vercel projekt
+# vyhodnotí ako Node server a hľadá vstupný bod namiesto statického webu.
 server.js
+package.json
 
+# lokálne nastavenia nástrojov
+.claude/
 README.md
